@@ -1,82 +1,115 @@
 package xoleko;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.InterModComms;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
-import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.stream.Collectors;
+import net.minecraft.block.Block;
+import net.minecraft.entity.EntityType;
+import net.minecraft.item.Item;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.world.biome.Biome;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import xoleko.init.TerraItems;
+import xoleko.util.MoreWordUtils;
 
-@Mod("terracraft")
+@Mod(TerraCraft.MOD_ID)
 public class TerraCraft
 {
-    private static final Logger LOGGER = LogManager.getLogger();
     public static final String MOD_ID = "terracraft";
-    public static TerraCraft instance;
+	public static final String MOD_PREFIX = MOD_ID + ":";
+    public static final Logger LOGGER = LogManager.getLogger();
 
-    public TerraCraft() 
+    public TerraCraft()
     {
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::enqueueIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::processIMC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::doClientStuff);
-        
-        instance = this;
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+    	MinecraftForge.EVENT_BUS.register(this);
+    	
+    	IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+    	modBus.addListener(this::setup);
+    	modBus.addListener(this::clientSetup);
     }
-
+    
     private void setup(final FMLCommonSetupEvent event)
     {
-        LOGGER.info("HELLO FROM PREINIT");
-        LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());
+    	//LOGGER.info("Registered entity spawns");
     }
-
-    private void doClientStuff(final FMLClientSetupEvent event) {
-        // do something that can only be done on the client
-        LOGGER.info("Got game settings {}", event.getMinecraftSupplier().get().gameSettings);
-    }
-
-    private void enqueueIMC(final InterModEnqueueEvent event)
+    
+    private void clientSetup(final FMLClientSetupEvent event)
     {
-        // some example code to dispatch IMC to another mod
-        InterModComms.sendTo("TerraCraft", "helloworld", () -> { LOGGER.info("Hello world from the MDK"); return "Hello world";});
+    	//LOGGER.info("Registered entity renders");
     }
-
-    private void processIMC(final InterModProcessEvent event)
-    {
-        // some example code to receive and process InterModComms from other mods
-        LOGGER.info("Got IMC {}", event.getIMCStream().
-                map(m->m.getMessageSupplier().get()).
-                collect(Collectors.toList()));
-    }
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
+    
     @SubscribeEvent
-    public void onServerStarting(FMLServerStartingEvent event) {
-        // do something when the server starts
-        LOGGER.info("HELLO from server starting");
+    public void serverSetup(final FMLServerStartingEvent event)
+    {
+    	//LOGGER.info("Registered commands");
     }
+    
+	@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+	public static class ModRegistryEvents
+	{
+		@SubscribeEvent
+		public static void blocksRegistry(final RegistryEvent.Register<Block> event)
+		{
+			// event.getRegistry().registerAll(TerraBlocks.BLOCKS.toArray(new Block[0]));
+			// LOGGER.info("Registered " + MoreWordUtils.numerate(TerraBlocks.BLOCKS.size(), "block"));
+		}
 
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus=Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
-            // register a new block here
-            LOGGER.info("HELLO from Register Block");
-        }
-    }
+		@SubscribeEvent
+		public static void itemsRegistry(final RegistryEvent.Register<Item> event)
+		{
+			event.getRegistry().registerAll(TerraItems.ITEMS.toArray(new Item[0]));
+			LOGGER.info("Registered " + MoreWordUtils.numerate(TerraItems.ITEMS.size(), "item"));
+		}
+
+		@SubscribeEvent
+		public static void entitiesRegistry(final RegistryEvent.Register<EntityType<?>> event)
+		{
+			// event.getRegistry().registerAll(TerraEntities.ENTITY_TYPES.toArray(new EntityType<?>[0]));
+			// LOGGER.info("Registered " + MoreWordUtils.numerate(TerraEntities.ENTITY_TYPES.size(), "entity"));
+			// TerraEntities.registerPlacements();
+			// LOGGER.info("Registered entity spawn placements");
+		}
+
+		@SubscribeEvent
+		public static void soundsRegistry(final RegistryEvent.Register<SoundEvent> event)
+		{
+			// event.getRegistry().registerAll(TerraSounds.SOUNDS.toArray(new SoundEvent[0]));
+			// LOGGER.info("Registered " + MoreWordUtils.numerate(TerraSounds.SOUNDS.size(), "sound"));
+		}
+
+		@SubscribeEvent
+		public static void biomesRegistry(final RegistryEvent.Register<Biome> event)
+		{
+			// event.getRegistry().registerAll(TerraBiomes.BIOMES.toArray(new Biome[0]));
+			// TerraBiomes.registerGenerations();
+			// LOGGER.info("Registered " + MoreWordUtils.numerate(TerraBiomes.BIOMES.size(), "biome"));
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		@SubscribeEvent
+		public static void blockColorsRegistry(final ColorHandlerEvent.Block event)
+		{
+			// TerraColorMaps.registerBlockColors(event);
+			// LOGGER.info("Registered color maps for blocks");
+		}
+
+		@OnlyIn(Dist.CLIENT)
+		@SubscribeEvent
+		public static void itemColorsRegistry(final ColorHandlerEvent.Item event)
+		{
+			// TerraColorMaps.registerItemColors(event);
+			// LOGGER.info("Registered color maps for items");
+		}
+	}
 }
