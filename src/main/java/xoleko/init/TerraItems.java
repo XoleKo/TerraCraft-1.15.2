@@ -13,6 +13,7 @@ public class TerraItems
 	public static final List<Item> ITEMS = new ArrayList<Item>();
 	
 	public static final Item WHOOPIE_CUSHION = register("whoopie_cushion", new Item(new Item.Properties().group(ItemGroup.MISC)));
+	public static final Item GOLDEN_KEY = register("golden_key", new Item(new Item.Properties().group(ItemGroup.MISC)));
 	
 	private static Item register(String name, Item item)
 	{
