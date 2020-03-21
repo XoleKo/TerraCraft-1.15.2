@@ -20,7 +20,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import xoleko.init.TerraBlocks;
 import xoleko.init.TerraItems;
+import xoleko.init.TerraSounds;
 import xoleko.util.MoreWordUtils;
 
 @Mod(TerraCraft.MOD_ID)
@@ -61,13 +63,15 @@ public class TerraCraft
 		@SubscribeEvent
 		public static void blocksRegistry(final RegistryEvent.Register<Block> event)
 		{
-			// event.getRegistry().registerAll(TerraBlocks.BLOCKS.toArray(new Block[0]));
-			// LOGGER.info("Registered " + MoreWordUtils.numerate(TerraBlocks.BLOCKS.size(), "block"));
+			event.getRegistry().registerAll(TerraBlocks.BLOCKS.toArray(new Block[0]));
+			LOGGER.info("Registered " + MoreWordUtils.numerate(TerraBlocks.BLOCKS.size(), "block"));
 		}
 
 		@SubscribeEvent
 		public static void itemsRegistry(final RegistryEvent.Register<Item> event)
 		{
+			event.getRegistry().registerAll(TerraBlocks.CUBES.toArray(new Item[0]));
+			
 			event.getRegistry().registerAll(TerraItems.ITEMS.toArray(new Item[0]));
 			LOGGER.info("Registered " + MoreWordUtils.numerate(TerraItems.ITEMS.size(), "item"));
 		}
@@ -84,8 +88,8 @@ public class TerraCraft
 		@SubscribeEvent
 		public static void soundsRegistry(final RegistryEvent.Register<SoundEvent> event)
 		{
-			// event.getRegistry().registerAll(TerraSounds.SOUNDS.toArray(new SoundEvent[0]));
-			// LOGGER.info("Registered " + MoreWordUtils.numerate(TerraSounds.SOUNDS.size(), "sound"));
+			event.getRegistry().registerAll(TerraSounds.SOUNDS.toArray(new SoundEvent[0]));
+			LOGGER.info("Registered " + MoreWordUtils.numerate(TerraSounds.SOUNDS.size(), "sound"));
 		}
 
 		@SubscribeEvent

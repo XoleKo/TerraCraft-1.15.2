@@ -2,6 +2,6 @@
 	"parent": "item/generated",
 	"textures":
 	{
-		"layer0": "terracraft:items/whoopie_cushion"
+		"layer0": "terracraft:items/copper_bar"
 	}
 }

@@ -14,6 +14,7 @@ public class TerraItems
 	
 	public static final Item WHOOPIE_CUSHION = register("whoopie_cushion", new Item(new Item.Properties().group(ItemGroup.MISC)));
 	public static final Item GOLDEN_KEY = register("golden_key", new Item(new Item.Properties().group(ItemGroup.MISC)));
+	public static final Item COPPER_BAR = register("copper_bar", new Item(new Item.Properties().group(ItemGroup.MISC)));
 	
 	private static Item register(String name, Item item)
 	{

@@ -1,4 +1,8 @@
 {
 	"item.terracraft.whoopie_cushion": "Whoopie Cushion",
-	"item.terracraft.golden_key": "Golden Key"
+	"item.terracraft.golden_key": "Golden Key",
+	"item.terracraft.copper_bar": "Copper Bar",
+	
+	
+	"block.terracraft.copper_ore": "Copper Ore"
 }
